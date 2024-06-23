@@ -94,3 +94,15 @@ Build the web app
 ```shell
 npm run build
 ```
+
+
+
+wallet addresses response : 2y3f33wjWNmkHhsYS1KF8d7Ua9drZ99SWz9HB7H6E4E4
+
+Program Id: TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+
+created account under token: wR8d3NUDcCw1RvUFV9MDaRBPaDYwqgA1CRpw7pXbrCA
+
+- MINT 100 TOKEN TO Recipient -
+Token: 2y3f33wjWNmkHhsYS1KF8d7Ua9drZ99SWz9HB7H6E4E4
+Recipient: wR8d3NUDcCw1RvUFV9MDaRBPaDYwqgA1CRpw7pXbrCA
