@@ -1,28 +1,39 @@
-import React, { useEffect, useState } from 'react';
+// pages/index.tsx
+import { useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
-import { fetchUserNFTs } from './services/nftService';
+import Image from 'next/image';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { fetchUserNFTs } from './../../service/sol-service';
 
-const UserNFTs: React.FC<{ userPublicKey: PublicKey }> = ({ userPublicKey }) => {
-    const [userNFTs, setUserNFTs] = useState<any[]>([]);
+const userPublicKey = new PublicKey('YOUR_USER_PUBLIC_KEY');
+
+const UserNft = () => {
+    const [nfts, setNfts] = useState<any[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const nfts = await fetchUserNFTs(userPublicKey);
-            setUserNFTs(nfts);
+        const fetchNFTs = async () => {
+            const fetchedNFTs = await fetchUserNFTs(userPublicKey);
+            setNfts(fetchedNFTs);
         };
 
-        fetchData();
-    }, [userPublicKey]);
+        fetchNFTs();
+    }, []);
 
     return (
         <div>
-            <h2>User's NFTs</h2>
-            <div>
-                {userNFTs.map((nft, index) => (
-                    <div key={index}>
-                        <img src={nft.image} alt={nft.name} />
-                        <p>{nft.name}</p>
-                        <p>{nft.description}</p>
+            <h1>User NFTs</h1>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {nfts.map((nft, index) => (
+                    <div key={index} style={{ margin: '10px' }}>
+                        <Image
+                            src={nft.data.uri}
+                            alt={nft.data.name}
+                            width={200}
+                            height={200}
+                            quality={75}
+                            layout="responsive"
+                        />
+                        <p>{nft.data.name}</p>
                     </div>
                 ))}
             </div>
@@ -30,4 +41,4 @@ const UserNFTs: React.FC<{ userPublicKey: PublicKey }> = ({ userPublicKey }) => 
     );
 };
 
-export default UserNFTs;
+export default UserNft;
