@@ -51,7 +51,7 @@ async function fetchUserNFTs(userPublicKey: PublicKey): Promise<any[]> {
     const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(wallet))
 
-    let mintAddress:any;
+    let mintAddress: any;
 
     const nftMetadataPromises = tokenAccounts.value.map(async (tokenAccount) => {
         mintAddress = tokenAccount.account.data.parsed.info.mint;
@@ -60,10 +60,20 @@ async function fetchUserNFTs(userPublicKey: PublicKey): Promise<any[]> {
         return metadataAccount.data;
     });
 
-    const nft = await metaplex.nfts().findByMint({ mintAddress });
+    const nftMetadata = await Promise.all(nftMetadataPromises);
 
-    return await Promise.all(nftMetadataPromises);
+    const nfts = await Promise.all(nftMetadata.map(async (metadata) => {
+        mintAddress = metadata.mint;
+        const nft = await metaplex.nfts().findByMint({ mintAddress });
+        return {
+            metadata,
+            nft
+        };
+    }));
+
+    return nfts;
 }
+
 
 
 
