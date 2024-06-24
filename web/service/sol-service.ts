@@ -9,7 +9,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const PAYER_SECRET_KEY_BASE64 = 'GjCbG6tFdW2MbWXxqfgn79MbVqW+yMCT+kRL4JgRqms=';
 const wallet = Keypair.generate();
 const payer = Keypair.fromSecretKey(new Uint8Array(Buffer.from(PAYER_SECRET_KEY_BASE64, 'base64')));
-const YOUR_PROGRAM_ID = "";
+const YOUR_PROGRAM_ID = "EvrVb8xTURBJJi41ogioxxi64p3YaZmDTPpN3M6CXi7G";
 const NFT_ADDRESS = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 // const metaplex = Metaplex.make(connection).use(keypairIdentity(payer)).use(bundlrStorage());
 
