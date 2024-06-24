@@ -1,4 +1,4 @@
-import { Connection, PublicKey, Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
+import { Connection, clusterApiUrl,  PublicKey, Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { Metaplex, keypairIdentity, walletAdapterIdentity } from '@metaplex-foundation/js';
 import { Metadata, MetadataProgram } from '@metaplex-foundation/mpl-token-metadata';
 import { Buffer } from 'buffer';
@@ -7,7 +7,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 
 const PAYER_SECRET_KEY_BASE64 = 'GjCbG6tFdW2MbWXxqfgn79MbVqW+yMCT+kRL4JgRqms=';
-
+const wallet = Keypair.generate();
 const payer = Keypair.fromSecretKey(new Uint8Array(Buffer.from(PAYER_SECRET_KEY_BASE64, 'base64')));
 const YOUR_PROGRAM_ID = "";
 const NFT_ADDRESS = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
@@ -48,15 +48,24 @@ async function fetchUserNFTs(userPublicKey: PublicKey): Promise<any[]> {
         programId: new PublicKey(NFT_ADDRESS)
     });
 
+    const metaplex = Metaplex.make(connection)
+    .use(keypairIdentity(wallet))
+
+    let mintAddress:any;
+
     const nftMetadataPromises = tokenAccounts.value.map(async (tokenAccount) => {
-        const mintAddress = tokenAccount.account.data.parsed.info.mint;
+        mintAddress = tokenAccount.account.data.parsed.info.mint;
         const metadataPDA = await Metadata.getPDA(new PublicKey(mintAddress));
         const metadataAccount = await Metadata.load(connection, metadataPDA);
         return metadataAccount.data;
     });
 
+    const nft = await metaplex.nfts().findByMint({ mintAddress });
+
     return await Promise.all(nftMetadataPromises);
 }
+
+
 
 export {
     initializeAccount,

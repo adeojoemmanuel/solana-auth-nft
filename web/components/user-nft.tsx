@@ -2,8 +2,7 @@
 import { useEffect, useState } from 'react';
 import { PublicKey } from '@solana/web3.js';
 import Image from 'next/image';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { fetchUserNFTs } from './../../service/sol-service';
+import { fetchUserNFTs } from './../service/sol-service';
 
 const userPublicKey = new PublicKey('YOUR_USER_PUBLIC_KEY');
 
