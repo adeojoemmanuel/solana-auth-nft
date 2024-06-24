@@ -5,47 +5,47 @@ import { Buffer } from 'buffer';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
-// Example base64 encoded secret key
-const YOUR_PAYER_SECRET_KEY_BASE64 = 'YOUR_BASE64_ENCODED_SECRET_KEY'; // Replace with your actual base64 secret key
 
-const payer = Keypair.fromSecretKey(new Uint8Array(Buffer.from(YOUR_PAYER_SECRET_KEY_BASE64, 'base64')));
+const PAYER_SECRET_KEY_BASE64 = 'GjCbG6tFdW2MbWXxqfgn79MbVqW+yMCT+kRL4JgRqms=';
 
+const payer = Keypair.fromSecretKey(new Uint8Array(Buffer.from(PAYER_SECRET_KEY_BASE64, 'base64')));
+const YOUR_PROGRAM_ID = "";
+const NFT_ADDRESS = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 // const metaplex = Metaplex.make(connection).use(keypairIdentity(payer)).use(bundlrStorage());
 
 async function initializeAccount(userPublicKey: PublicKey): Promise<void> {
-    const programId = new PublicKey('YOUR_PROGRAM_ID');
+    const programId = new PublicKey(YOUR_PROGRAM_ID);
     const instruction = new TransactionInstruction({
         keys: [{ pubkey: userPublicKey, isSigner: false, isWritable: true }],
         programId,
-        data: Buffer.from([0]), // Initialize instruction selector
+        data: Buffer.from([0]),
     });
     await connection.sendTransaction(new Transaction().add(instruction), [payer]);
 }
 
 async function authenticateAccount(userPublicKey: PublicKey): Promise<void> {
-    const programId = new PublicKey('YOUR_PROGRAM_ID');
+    const programId = new PublicKey(YOUR_PROGRAM_ID);
     const instruction = new TransactionInstruction({
         keys: [{ pubkey: userPublicKey, isSigner: false, isWritable: true }],
         programId,
-        data: Buffer.from([1]), // Authenticate instruction selector
+        data: Buffer.from([1]),
     });
     await connection.sendTransaction(new Transaction().add(instruction), [payer]);
 }
 
 async function deauthenticateAccount(userPublicKey: PublicKey): Promise<void> {
-    const programId = new PublicKey('YOUR_PROGRAM_ID');
+    const programId = new PublicKey(YOUR_PROGRAM_ID);
     const instruction = new TransactionInstruction({
         keys: [{ pubkey: userPublicKey, isSigner: false, isWritable: true }],
         programId,
-        data: Buffer.from([2]), // Deauthenticate instruction selector
+        data: Buffer.from([2]),
     });
     await connection.sendTransaction(new Transaction().add(instruction), [payer]);
 }
 
 async function fetchUserNFTs(userPublicKey: PublicKey): Promise<any[]> {
-    // Fetch all token accounts owned by the user
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(userPublicKey, {
-        programId: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
+        programId: new PublicKey(NFT_ADDRESS)
     });
 
     const nftMetadataPromises = tokenAccounts.value.map(async (tokenAccount) => {
