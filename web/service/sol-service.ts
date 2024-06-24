@@ -74,9 +74,6 @@ async function fetchUserNFTs(userPublicKey: PublicKey): Promise<any[]> {
     return nfts;
 }
 
-
-
-
 export {
     initializeAccount,
     authenticateAccount,
