@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_lang::system_program;
 
-declare_id!("EvrVb8xTURBJJi41ogioxxi64p3YaZmDTPpN3M6CXi7G");
+declare_id!("7W8iarHkr67PobvWk8SiveNRG38ywtE2dwcS3tDdgu5h");
 
 #[program]
 pub mod solana_authentication_program {

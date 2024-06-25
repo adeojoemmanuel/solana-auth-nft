@@ -1,17 +1,18 @@
-import { Connection, clusterApiUrl, PublicKey, Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
-import { Metaplex, keypairIdentity, walletAdapterIdentity } from '@metaplex-foundation/js';
+import { Connection, PublicKey, Keypair, Transaction, TransactionInstruction } from '@solana/web3.js';
+import { Metaplex, keypairIdentity } from '@metaplex-foundation/js';
 import { Buffer } from 'buffer';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
-const PAYER_SECRET_KEY_BASE64 = 'GjCbG6tFdW2MbWXxqfgn79MbVqW+yMCT+kRL4JgRqms=';
-const wallet = Keypair.generate();
-const payer = Keypair.fromSecretKey(new Uint8Array(Buffer.from(PAYER_SECRET_KEY_BASE64, 'base64')));
-const YOUR_PROGRAM_ID = "EvrVb8xTURBJJi41ogioxxi64p3YaZmDTPpN3M6CXi7G";
-const NFT_ADDRESS = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
+const MY_PROGRAM_ID = "7W8iarHkr67PobvWk8SiveNRG38ywtE2dwcS3tDdgu5h";
+const NFT_ADDRESS = "2y3f33wjWNmkHhsYS1KF8d7Ua9drZ99SWz9HB7H6E4E4";
 
-async function initializeAccount(userPublicKey: PublicKey): Promise<void> {
-    const programId = new PublicKey(YOUR_PROGRAM_ID);
+async function initializeAccount(userPublicKey: PublicKey, payer: Keypair | null): Promise<void> {
+    if (!payer) {
+        throw new Error('Payer keypair is required');
+    }
+
+    const programId = new PublicKey(MY_PROGRAM_ID);
     const instruction = new TransactionInstruction({
         keys: [{ pubkey: userPublicKey, isSigner: false, isWritable: true }],
         programId,
@@ -20,8 +21,12 @@ async function initializeAccount(userPublicKey: PublicKey): Promise<void> {
     await connection.sendTransaction(new Transaction().add(instruction), [payer]);
 }
 
-async function authenticateAccount(userPublicKey: PublicKey): Promise<void> {
-    const programId = new PublicKey(YOUR_PROGRAM_ID);
+async function authenticateAccount(userPublicKey: PublicKey, payer: Keypair | null): Promise<void> {
+    if (!payer) {
+        throw new Error('Payer keypair is required');
+    }
+
+    const programId = new PublicKey(MY_PROGRAM_ID);
     const instruction = new TransactionInstruction({
         keys: [{ pubkey: userPublicKey, isSigner: false, isWritable: true }],
         programId,
@@ -30,8 +35,12 @@ async function authenticateAccount(userPublicKey: PublicKey): Promise<void> {
     await connection.sendTransaction(new Transaction().add(instruction), [payer]);
 }
 
-async function deauthenticateAccount(userPublicKey: PublicKey): Promise<void> {
-    const programId = new PublicKey(YOUR_PROGRAM_ID);
+async function deauthenticateAccount(userPublicKey: PublicKey, payer: Keypair | null): Promise<void> {
+    if (!payer) {
+        throw new Error('Payer keypair is required');
+    }
+
+    const programId = new PublicKey(MY_PROGRAM_ID);
     const instruction = new TransactionInstruction({
         keys: [{ pubkey: userPublicKey, isSigner: false, isWritable: true }],
         programId,
@@ -40,13 +49,17 @@ async function deauthenticateAccount(userPublicKey: PublicKey): Promise<void> {
     await connection.sendTransaction(new Transaction().add(instruction), [payer]);
 }
 
-async function fetchUserNFTs(userPublicKey: PublicKey): Promise<{ nftPromises: Promise<any>[], nfts: any[] }> {
+async function fetchUserNFTs(userPublicKey: PublicKey, keypairHolder: Keypair | null): Promise<{ nftPromises: Promise<any>[], nfts: any[] }> {
+    if (!keypairHolder) {
+        throw new Error('Keypair holder is required');
+    }
+
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(userPublicKey, {
         programId: new PublicKey(NFT_ADDRESS)
     });
 
     const metaplex = Metaplex.make(connection)
-        .use(keypairIdentity(wallet));
+        .use(keypairIdentity(keypairHolder));
 
     const nftPromises = tokenAccounts.value.map(async (tokenAccount) => {
         const mintAddress = new PublicKey(tokenAccount.account.data.parsed.info.mint);
@@ -57,8 +70,6 @@ async function fetchUserNFTs(userPublicKey: PublicKey): Promise<{ nftPromises: P
     const nfts = await Promise.all(nftPromises);
     return { nftPromises, nfts };
 }
-
-
 
 export {
     initializeAccount,

@@ -10,7 +10,6 @@
     "feature": "nx generate @solana-developers/preset-react:feature",
     "build": "nx build web",
     "dev": "nx serve web"
-  },
   "private": true,
   "dependencies": {
     "@coral-xyz/anchor": "^0.30.0",
@@ -64,5 +63,8 @@
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.4.2"
-  }
+  },
+  "description": "This project is generated with the [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) generator.",
+  "main": "index.js",
+  "author": ""
 }

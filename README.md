@@ -41,7 +41,10 @@ This is a Solana program written in Rust using the Anchor framework.
 
 #### Commands
 
-You can use any normal anchor commands. Either move to the `anchor` directory and run the `anchor` command or prefix the command with `npm run`, eg: `npm run anchor`.
+You can use any normal anchor commands. Either move to the `anchor` directory and run the `anchor` command or prefix the command with `npm run`, eg: `npm run anchor`. 
+
+## or follow the easier route like me, incase you have a cargo build-bfs error 😂 
+you can make use of the solana playground, i generated a default key for test purposes, and to easily setup without much configuration 
 
 #### Sync the program id:
 
@@ -76,6 +79,10 @@ npm run anchor-test
 ```shell
 npm run anchor deploy --provider.cluster devnet
 ```
+### meeting test requirement 
+
+- the solana service is located in ny-nft-app/src/service/sol-service.ts
+- the idl.json file is located in ny-nft-app/src/service/idl.json
 
 ### web
 
